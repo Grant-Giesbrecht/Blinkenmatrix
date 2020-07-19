@@ -1,0 +1,9 @@
+//This file specifies the computer's instructions
+
+* ADD 11 0
+0: FETCH
+1: RAM_OE=OFF ADDER=ON REGC_WR
+
+* SUB 11 0
+0: FETCH
+1: RAM_OE=OFF ADDER=ON REGC_WR INV_B=ON CARRY_IN=ON
