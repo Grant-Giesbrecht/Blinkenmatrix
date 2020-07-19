@@ -497,39 +497,6 @@ void print_operations(map<string, operation> ops, size_t pin_cols = 4){
 }
 
 
-string bin_to_str(std::vector<bool> x, int pad_to_bits=8, bool LSB_right = true){
-
-	string out;
-
-	if (!LSB_right){
-		for (size_t i = 0 ; i < x.size() ; i++){
-			if (x[i]){
-				out = out + "1";
-			}else{
-				out = out + "0";
-			}
-		}
-
-		for (size_t i = out.length() ; i < pad_to_bits ; i++){
-			out = out + "0";
-		}
-	}else{
-		for (size_t i = 0 ; i < x.size() ; i++){
-			if (x[i]){
-				out = "1"+out;
-			}else{
-				out = "0"+out;
-			}
-		}
-
-		for (size_t i = out.length() ; i < pad_to_bits ; i++){
-			out = "0"+out;
-		}
-	}
-
-	return out;
-}
-
 /*
 Maps (LSB -> MSB):
 	Instruction: 4, 5, 6, 7, 12, 14
