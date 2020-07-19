@@ -7,20 +7,36 @@
 #include <IEGA/KTable.hpp>
 #include <sstream>
 #include <bitset>
+#include <map>
 
 using namespace std;
+
+typedef struct{
+	string name;
+	int instruction_no;
+	int data_bits;
+	map <int, map<int, map<int, bool> > > ctrls;
+}operation;
+
+typedef struct{
+	string name;
+	int word;
+	int pin;
+	bool active_low;
+	bool default_off;
+}control_line;
 
 /*
 
 */
-bool read_opfile(string keyfile){
+bool read_OPF(string opfile){
 
 	vector<string> words;
 
 	size_t line_num = 0;
 
 	//read through file
-	ifstream file(keyfile.c_str());
+	ifstream file(opfile.c_str());
 	if (file.is_open()) {
 		string line;
 
@@ -33,11 +49,23 @@ bool read_opfile(string keyfile){
 			if (line.length() >= 2 && line.substr(0, 2) == "//") continue; //Skip comments
 
 			//Parse words
-			words = parse(line, " \t");
+			words = parse(line, " \t*@=");
 
 			//Ensure words exist
 			if (words.size() < 1){
 				continue;
+			}
+
+			if (words[0] == "*"){
+
+				//Ensure correct number of words
+				if (words.size() != 4){
+					cout << "ERROR: " << opfile << ":Line " << to_string(line_num) << " contains more/less than 4 tokens" << endl;
+					return false;
+				}
+
+			}else if (words[0] == "@"){
+
 			}
 
 			//Ensure exactly 3 tokens
@@ -51,7 +79,7 @@ bool read_opfile(string keyfile){
 				keys.push_back(tempkey);
 
 			}else{
-				cout << "ERROR: " << keyfile << ":Line " << to_string(line_num) << " contains more/less than 3 tokens" << endl;
+				cout << "ERROR: " << opfile << ":Line " << to_string(line_num) << " contains more/less than 3 tokens" << endl;
 				return false;
 			}
 
@@ -59,7 +87,7 @@ bool read_opfile(string keyfile){
 		}
 		file.close();
 	}else{
-		cout << "ERROR: Failed to read '" << keyfile << "'." << endl;
+		cout << "ERROR: Failed to read '" << opfile << "'." << endl;
 		return false;
 	}
 
