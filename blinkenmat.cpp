@@ -267,7 +267,22 @@ Reads an operation file (.OPF) and returns a map of operations.
 			trim_whitespace(line); //Remove whitespace from line
 
 			if (line.length() == 0) continue; //Continue if blank
-			if (line.length() >= 2 && line.substr(0, 2) == "//") continue; //Skip comments
+//			if (line.length() >= 2 && line.substr(0, 2) == "//") continue; //Skip comments
+
+			//Trim everything after double forward slash (comment), INCLUDING those in quotes!
+			bool skip_line = false;
+			for (size_t i = 0 ; i < line.length()-1 ; i++){
+				if (line.substr(i, 2) == "//"){
+					if (i == 0){
+						skip_line = true;
+						break;
+					}else{
+						line = line.substr(0, i-1);
+						break;
+					}
+				}
+			}
+			if (skip_line) continue;
 
 			//Parse words
 			gstd::ensure_whitespace(line, "*=@:");
@@ -552,7 +567,7 @@ bool sort_intline(int_line x, int_line y){
 	return x.addr < y.addr;
 }
 
-vector<string> generate_pcm(map<string, operation> ops, vector<control_line> controls){
+vector<string> generate_bcm(map<string, operation> ops, vector<control_line> controls){
 
 	map<string, operation>::iterator it;
 	map<int, map<int, map<int, bool> > >::iterator phase_it;
@@ -638,10 +653,32 @@ vector<string> generate_pcm(map<string, operation> ops, vector<control_line> con
 
 }
 
-void print_pcm(vector<string> pcm){
-	for (size_t i = 0 ; i < pcm.size() ; i++){
-		cout << pcm[i] << endl;
+void print_bcm(vector<string> bcm){
+	for (size_t i = 0 ; i < bcm.size() ; i++){
+		cout << bcm[i] << endl;
 	}
+}
+
+bool save_bcm(string filename, vector<string> bcm){
+
+
+	srand(time(NULL));
+
+	ofstream file;
+	file.open (filename);
+
+	if (!file.is_open()){
+		return false;
+	}
+
+	for (size_t i = 0 ; i < bcm.size() ; i++){
+		file << bcm[i] << endl;
+	}
+
+	file.close();
+
+	return true;
+
 }
 
 int main(int argc, char** argv){
@@ -650,7 +687,7 @@ int main(int argc, char** argv){
 	map<string, operation> ops;
 
 	if (argc < 3){
-		read_CW("./opfiles/defaults.cw", controls);
+		read_CW("./opfiles/memorydelta.cw", controls);
 	}else{
 		read_CW(argv[1], controls);
 	}
@@ -658,18 +695,24 @@ int main(int argc, char** argv){
 	print_controls(controls);
 
 	if (argc < 2){
-		read_OPF("./opfiles/add.opf", controls, ops);
+		read_OPF("./opfiles/memorydelta.opf", controls, ops);
 	}else{
 		read_OPF(argv[1], controls, ops);
 	}
 
 	print_operations(ops);
 
-	std::vector<string> pcm = generate_pcm(ops, controls);
+	std::vector<string> bcm = generate_bcm(ops, controls);
 
 	cout << endl;
-	print_pcm(pcm);
+	print_bcm(bcm);
 
+	string bcm_out = "./opfiles/memorydelta.bcm";
+	if (save_bcm(bcm_out, bcm)){
+		cout << "Successfully saved BCM data to file '" << bcm_out << "'." << endl;
+	}else{
+		cout << "ERROR: Failed to write file '" << bcm_out << "'!" << endl;
+	}
 
 	return 0;
 }
