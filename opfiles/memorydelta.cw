@@ -2,19 +2,19 @@
 //
 // Created for Program1.pbin on 22-7-20202
 
-// *************** WORD 0 *****************************************//
+// *************** WORD 0/TAKES WORD 7'S CLOCK *****************************************//
 //      **** REGISTERS ******
 //
 // NOTE: CPU W0P0 matches CU W0P0
 
-REGC_OE			0:0			OFF!
-REGC_WR			0:1			OFF
-REGB_WR			0:2			OFF
-REGA_WR			0:3			OFF
-REGRTN8_OE		0:4			OFF!
-REGRTN0_OE		0:5			OFF!
-REGRTN8_WR		0:6			OFF
-REGRTN0_WR		0:7			OFF
+REGC_OE			7:0			OFF!
+REGC_WR			7:1			OFF
+REGB_WR			7:2			OFF
+REGA_WR			7:3			OFF
+REGRTN8_OE		7:4			OFF!
+REGRTN0_OE		7:5			OFF!
+REGRTN8_WR		7:6			OFF
+REGRTN0_WR		7:7			OFF
 
 // *************** WORD 1 *****************************************//
 //      **** MEMORY ACCESS, INSTRUCTION REG ******

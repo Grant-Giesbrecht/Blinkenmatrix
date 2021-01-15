@@ -13,7 +13,7 @@
 
 //CXCOMPILE make
 
-#define NUM_WORD 5
+#define NUM_WORD 8
 
 #define COUT_ERROR cout << "ERROR [f='" << readfile << "'][L=" << to_string(line_num) << "]: "
 
@@ -690,6 +690,7 @@ int main(int argc, char** argv){
 		read_CW("./opfiles/memorydelta.cw", controls);
 	}else{
 		read_CW(argv[1], controls);
+		cout << "Reading (CW): " << argv[2] << endl;
 	}
 
 	print_controls(controls);
@@ -698,6 +699,7 @@ int main(int argc, char** argv){
 		read_OPF("./opfiles/memorydelta.opf", controls, ops);
 	}else{
 		read_OPF(argv[1], controls, ops);
+		cout << "Reading (OPF): " << argv[1] << endl;
 	}
 
 	print_operations(ops);
